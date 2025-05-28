@@ -79,15 +79,3 @@ Pocos intentan un análisis serio:
 ---
 *Última actualización: 2025-05-09*
 ```
-
-### Explicación
-- **Resumen**: Captura la esencia del incidente y la reacción en línea, usando una cita directa de la entrada.
-- **Detalles**: Incluye fecha (deducida de los comentarios), lugar, causa y fuente, manteniendo la información clara.
-- **Contexto**: Explica el hacinamiento del metro y la cultura digital de 2010, conectando el evento con su entorno.
-- **Análisis de Comentarios**: Clasifica las reacciones en cuatro categorías con ejemplos representativos.
-- **Glosario**: Define términos clave de la jerga venezolana con enlaces a notas ficticias en Obsidian.
-- **Notas Adicionales**: Añade observaciones sobre el video y el contexto social.
-- **Recomendaciones**: Sugiere mejoras prácticas y de organización.
-- **Enlaces**: Propone conexiones a temas relacionados para integrar la nota en un vault de Obsidian.
-
-Esta nota está lista para usarse en Obsidian, con etiquetas y estructura que facilitan su navegación y análisis.
