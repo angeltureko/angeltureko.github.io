@@ -1,15 +1,15 @@
 ---
-title: Coñazo en Guarenas: Camionetica se Escoñetó y Mató a Más de 10 Panas
-excerpt: Trágico coñazo en Guarenas en 2010 dejó más de 10 muertos. Detalles del accidente, saqueos, y por qué sigue la vaina igual en 2025.
-publishDate: 'May 28 2025'
+title: "Coñazo en Guarenas: Camionetica se Escoñetó y Mató a Más de 10 Panas"
+excerpt: "Trágico coñazo en Guarenas en 2010 dejó más de 10 muertos. Detalles del accidente, saqueos, y por qué sigue la vaina igual en 2025."
+publishDate: "May 28 2025"
 tags:
   - Venezuela
   - Transporte
   - Sociedad
 seo:
   image:
-    src: '/accidente-guarenas.jpg'
-    alt: Camionetica accidentada entre dos puentes en Guarenas
+    src: "/accidente-guarenas.jpg"
+    alt: "Camionetica accidentada entre dos puentes en Guarenas"
 ---
 
 ![Camionetica accidentada entre dos puentes](/accidente-guarenas.jpg)
@@ -49,19 +49,19 @@ En diciembre de 2023, otra gandola sin frenos armó un desastre en la misma auto
 
 ### Problemas persistentes:
 
-- Carreteras hechas mierda
-- Choferes imprudentes
-- Falta de controles de velocidad
+- Carreteras hechas mierda  
+- Choferes imprudentes  
+- Falta de controles de velocidad  
 - Saqueos en accidentes
 
 ---
 
 ## ¿Cómo Podemos Evitar Esto?
 
-- **Reguladores de velocidad**: No más de 100 km/h
-- **Mantenimiento de las vías**
-- **Formación de choferes**
-- **Seguridad en zonas de accidente**
+- **Reguladores de velocidad**: No más de 100 km/h  
+- **Mantenimiento de las vías**  
+- **Formación de choferes responsables**  
+- **Seguridad en zonas de accidente para evitar saqueos**
 
 ---
 
