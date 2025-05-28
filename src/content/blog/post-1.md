@@ -1,6 +1,3 @@
-Aquí tienes una nota en formato Markdown para Obsidian basada en el incidente descrito en la consulta: una "coñiasa" en el Metro de Caracas en enero de 2010. La nota incluye un resumen, detalles, contexto, análisis de comentarios, glosario, notas adicionales y enlaces relacionados, siguiendo las mejores prácticas para organización y etiquetado en Obsidian.
-
-```markdown
 ---
 tags: [violencia, violencia/transporte-público, venezuela-2010, transporte-público, transporte-público/metro, cultura-digital, cultura-digital/sensacionalismo, morbo]
 created: 2010-01-13
