@@ -113,4 +113,3 @@ Déjanos tu comentario abajo y cuéntanos si has vivido un peo así en el Metro.
 - [[Problemas Sociales Venezuela 2010]]
 
 ---
-*Última actualización: 2025-05-29*
