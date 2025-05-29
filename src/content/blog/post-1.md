@@ -10,11 +10,11 @@ tags:
   - Cultura Digital
 seo:
   image:
-    src: "/coñiasa-metro-caracas.jpg"
+    src: "/coniasa-metro-caracas.jpg"
     alt: "Pelea violenta en un vagón del Metro de Caracas"
 ---
 
-![Pelea violenta en el Metro de Caracas](/coñiasa-metro-caracas.jpg)
+![Pelea violenta en el Metro de Caracas](/coniasa-metro-caracas.jpg)
 
 El Metro de Caracas se convirtió en un ring por el hacinamiento en 2010.
 
@@ -113,3 +113,4 @@ Déjanos tu comentario abajo y cuéntanos si has vivido un peo así en el Metro.
 - [[Problemas Sociales Venezuela 2010]]
 
 ---
+**Si te gustó este post, compártelo en Facebook, Reddit, o X.**
