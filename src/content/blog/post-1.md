@@ -10,7 +10,7 @@ tags:
   - Cultura Digital
 seo:
   image:
-    src: "/coniasa-metro-caracas.jpg"
+    src: "/post-1.jpg"
     alt: "Pelea violenta en un vagón del Metro de Caracas"
 ---
 
