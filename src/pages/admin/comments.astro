@@ -1,0 +1,237 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import AdminNav from '../../components/AdminNav.astro';
+import { db } from 'astro:db';
+import { Comments, Users } from 'astro:db';
+import { eq } from 'drizzle-orm';
+
+// Obtener comentarios pendientes
+const pendingComments = await db.select().from(Comments).where(eq(Comments.isApproved, false));
+
+// Obtener comentarios aprobados recientes
+const recentApprovedComments = await db.select().from(Comments).where(eq(Comments.isApproved, true)).limit(10);
+
+// Obtener usuarios para los comentarios
+const userIds = [...new Set([...pendingComments.map((c) => c.authorId), ...recentApprovedComments.map((c) => c.authorId)])];
+
+let users: any[] = [];
+if (userIds.length > 0) {
+    users = await db.select().from(Users);
+}
+
+// Crear un mapa de usuarios
+const userMap = new Map(users.map((user) => [user.id, user]));
+
+// Combinar datos
+const pendingWithUsers = pendingComments.map((comment) => ({
+    id: comment.id,
+    content: comment.content,
+    createdAt: comment.createdAt,
+    postId: comment.postId,
+    authorName: userMap.get(comment.authorId)?.name || 'Usuario Anónimo',
+    authorEmail: userMap.get(comment.authorId)?.email || 'N/A'
+}));
+
+const approvedWithUsers = recentApprovedComments.map((comment) => ({
+    id: comment.id,
+    content: comment.content,
+    createdAt: comment.createdAt,
+    postId: comment.postId,
+    authorName: userMap.get(comment.authorId)?.name || 'Usuario Anónimo',
+    authorEmail: userMap.get(comment.authorId)?.email || 'N/A'
+}));
+---
+
+<BaseLayout title="Moderar Comentarios" description="Panel de moderación de comentarios" showHeader={false}>
+    <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
+        <AdminNav />
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Moderar Comentarios</h1>
+                <p class="mt-2 text-gray-600 dark:text-gray-400">Aprobar o rechazar comentarios pendientes</p>
+            </div>
+
+            <!-- Comentarios pendientes -->
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow mb-8">
+                <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                    <h2 class="text-xl font-semibold text-gray-900 dark:text-white">
+                        Comentarios Pendientes ({pendingWithUsers.length})
+                    </h2>
+                </div>
+
+                {
+                    pendingWithUsers.length > 0 ? (
+                        <div class="divide-y divide-gray-200 dark:divide-gray-700">
+                            {pendingWithUsers.map((comment) => (
+                                <div class="p-6" data-comment-id={comment.id}>
+                                    <div class="flex justify-between items-start mb-4">
+                                        <div>
+                                            <h4 class="font-medium text-gray-900 dark:text-white">{comment.authorName}</h4>
+                                            <p class="text-sm text-gray-500">{comment.authorEmail}</p>
+                                            <p class="text-xs text-gray-400 mt-1">{new Date(comment.createdAt).toLocaleString('es-VE')}</p>
+                                            <p class="text-xs text-gray-400">Post: {comment.postId}</p>
+                                        </div>
+                                        <div class="flex gap-2">
+                                            <button
+                                                onclick={`window.approveComment(${comment.id})`}
+                                                class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-sm transition duration-200"
+                                            >
+                                                Aprobar
+                                            </button>
+                                            <button
+                                                onclick={`window.rejectComment(${comment.id})`}
+                                                class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm transition duration-200"
+                                            >
+                                                Rechazar
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded">
+                                        <p class="text-gray-800 dark:text-gray-200">{comment.content}</p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <div class="p-6 text-center text-gray-500">No hay comentarios pendientes de moderación.</div>
+                    )
+                }
+            </div>
+
+            <!-- Comentarios aprobados recientes -->
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
+                <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                    <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Comentarios Aprobados Recientes</h2>
+                </div>
+
+                {
+                    approvedWithUsers.length > 0 ? (
+                        <div class="divide-y divide-gray-200 dark:divide-gray-700">
+                            {approvedWithUsers.map((comment) => (
+                                <div class="p-6">
+                                    <div class="flex justify-between items-start mb-4">
+                                        <div>
+                                            <h4 class="font-medium text-gray-900 dark:text-white">{comment.authorName}</h4>
+                                            <p class="text-sm text-gray-500">{comment.authorEmail}</p>
+                                            <p class="text-xs text-gray-400 mt-1">{new Date(comment.createdAt).toLocaleString('es-VE')}</p>
+                                            <p class="text-xs text-gray-400">Post: {comment.postId}</p>
+                                        </div>
+                                        <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">Aprobado</span>
+                                    </div>
+                                    <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded">
+                                        <p class="text-gray-800 dark:text-gray-200">{comment.content}</p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <div class="p-6 text-center text-gray-500">No hay comentarios aprobados recientes.</div>
+                    )
+                }
+            </div>
+        </div>
+    </div>
+</BaseLayout>
+
+<script>
+    // Función para aprobar comentarios
+    window.approveComment = async function (commentId) {
+        console.log('Intentando aprobar comentario:', commentId);
+
+        try {
+            const response = await fetch('/api/admin/comments', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    commentId,
+                    action: 'approve'
+                })
+            });
+
+            console.log('Respuesta del servidor:', response.status, response.statusText);
+
+            if (response.ok) {
+                const result = await response.json();
+                console.log('Resultado:', result);
+
+                // Remover el comentario de la lista
+                const commentElement = document.querySelector(`[data-comment-id="${commentId}"]`);
+                if (commentElement) {
+                    commentElement.remove();
+                }
+
+                // Actualizar contador
+                const pendingCount = document.querySelectorAll('[data-comment-id]').length;
+                const titleElement = document.querySelector('h2');
+                if (titleElement) {
+                    titleElement.textContent = `Comentarios Pendientes (${pendingCount})`;
+                }
+
+                alert('Comentario aprobado exitosamente');
+            } else {
+                const errorText = await response.text();
+                console.error('Error response:', errorText);
+                alert('Error al aprobar el comentario');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Error al aprobar el comentario');
+        }
+    };
+
+    // Función para rechazar comentarios
+    window.rejectComment = async function (commentId) {
+        if (!confirm('¿Estás seguro de que quieres rechazar este comentario?')) {
+            return;
+        }
+
+        console.log('Intentando rechazar comentario:', commentId);
+
+        try {
+            const response = await fetch('/api/admin/comments', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    commentId,
+                    action: 'reject'
+                })
+            });
+
+            console.log('Respuesta del servidor:', response.status, response.statusText);
+
+            if (response.ok) {
+                const result = await response.json();
+                console.log('Resultado:', result);
+
+                // Remover el comentario de la lista
+                const commentElement = document.querySelector(`[data-comment-id="${commentId}"]`);
+                if (commentElement) {
+                    commentElement.remove();
+                }
+
+                // Actualizar contador
+                const pendingCount = document.querySelectorAll('[data-comment-id]').length;
+                const titleElement = document.querySelector('h2');
+                if (titleElement) {
+                    titleElement.textContent = `Comentarios Pendientes (${pendingCount})`;
+                }
+
+                alert('Comentario rechazado exitosamente');
+            } else {
+                const errorText = await response.text();
+                console.error('Error response:', errorText);
+                alert('Error al rechazar el comentario');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Error al rechazar el comentario');
+        }
+    };
+
+    console.log('Script de moderación cargado');
+</script>

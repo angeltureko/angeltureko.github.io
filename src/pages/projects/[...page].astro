@@ -1,10 +1,10 @@
 ---
 import type { GetStaticPathsOptions, Page } from 'astro';
 import { type CollectionEntry, getCollection } from 'astro:content';
-import BaseLayout from '../../layouts/BaseLayout.astro';
 import Pagination from '../../components/Pagination.astro';
 import ProjectPreview from '../../components/ProjectPreview.astro';
 import siteConfig from '../../data/site-config';
+import BaseLayout from '../../layouts/BaseLayout.astro';
 import { sortItemsByDateDesc } from '../../utils/data-utils';
 
 export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
@@ -14,17 +14,52 @@ export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
 
 type Props = { page: Page<CollectionEntry<'projects'>> };
 
-const { page } = Astro.props;
-const portfolio = page.data;
+// En modo servidor, obtener los datos dinámicamente
+let page: Page<CollectionEntry<'projects'>> | undefined;
+let portfolio: CollectionEntry<'projects'>[] = [];
+
+if (Astro.props.page) {
+    // Modo estático
+    page = Astro.props.page;
+    portfolio = page.data;
+} else {
+    // Modo servidor - obtener datos dinámicamente
+    const projects = (await getCollection('projects')).sort(sortItemsByDateDesc);
+    const currentPage = parseInt(Astro.params.page || '1');
+    const pageSize = siteConfig.projectsPerPage || 6;
+    const startIndex = (currentPage - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
+
+    portfolio = projects.slice(startIndex, endIndex);
+
+    // Crear objeto page para paginación
+    page = {
+        data: portfolio,
+        url: Astro.url,
+        currentPage,
+        lastPage: Math.ceil(projects.length / pageSize),
+        total: projects.length,
+        size: pageSize,
+        start: startIndex + 1,
+        end: Math.min(endIndex, projects.length),
+        prev: currentPage > 1 ? currentPage - 1 : undefined,
+        next: currentPage < Math.ceil(projects.length / pageSize) ? currentPage + 1 : undefined
+    } as unknown as Page<CollectionEntry<'projects'>>;
+}
+
+// Validar que page existe
+if (!page) {
+    return Astro.redirect('/404');
+}
 ---
 
 <BaseLayout
-    title="Portfolio"
-    description="Explore a diverse portfolio showcasing my passion and expertise"
-    image={{ src: '/dante-preview.jpg', alt: 'The preview of the site' }}
+    title="Portafolio"
+    description="Explora un portafolio diverso que muestra mi pasión y experiencia"
+    image={{ src: '/dante-preview.jpg', alt: 'La vista previa del sitio' }}
     showHeader={false}
 >
-    <h1 class="mb-12 text-2xl leading-tight font-serif italic sm:mb-16 sm:text-4xl">Projects</h1>
+    <h1 class="mb-12 text-2xl leading-tight font-serif italic sm:mb-16 sm:text-4xl">Proyectos</h1>
     {portfolio.map((project) => <ProjectPreview project={project} class="mb-10 sm:mb-12" />)}
     <Pagination page={page} class="my-16 sm:my-24" />
 </BaseLayout>

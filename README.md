@@ -1,91 +1,91 @@
-# Dante - Astro & Tailwind CSS Theme by justgoodui.com
+# Dante - Tema de Astro & Tailwind CSS por justgoodui.com
 
-Dante is a single-author blog and portfolio theme for Astro.js. Featuring a minimal, slick, responsive and content-focused design. For more Astro.js themes please check [justgoodui.com](https://justgoodui.com/).
+Dante es un tema de blog y portafolio de autor único para Astro.js. Cuenta con un diseño minimalista, elegante, responsivo y enfocado en el contenido. Para más temas de Astro.js, por favor revisa [justgoodui.com](https://justgoodui.com/).
 
-![Dante Astro.js Theme](public/dante-preview.jpg)
+![Tema Dante de Astro.js](public/dante-preview.jpg)
 
-[![Deploy to Netlify Button](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/JustGoodUI/dante-astro-theme)
+[![Botón de Despliegue a Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/JustGoodUI/dante-astro-theme)
 
-If you click this☝️ button, it will create a new repo for you that looks exactly like this one, and sets that repo up immediately for deployment on Netlify.
+Si haces clic en este botón☝️, creará un nuevo repositorio para ti que se ve exactamente como este, y configurará ese repositorio inmediatamente para el despliegue en Netlify.
 
-## Theme Features:
+## Características del Tema:
 
-- ✅ Dark and light color mode
-- ✅ Hero section with bio
-- ✅ Portfolio collection
-- ✅ Pagination support
-- ✅ Post tags support
-- ✅ Subscription form
-- ✅ View transitions
+- ✅ Modo de color oscuro y claro
+- ✅ Sección hero con biografía
+- ✅ Colección de portafolio
+- ✅ Soporte de paginación
+- ✅ Soporte de etiquetas de posts
+- ✅ Formulario de suscripción
+- ✅ Transiciones de vista
 - ✅ Tailwind CSS
-- ✅ Mobile-first responsive layout
-- ✅ SEO-friendly with canonical URLs and OpenGraph data
-- ✅ Sitemap support
-- ✅ RSS Feed support
-- ✅ Markdown & MDX support
+- ✅ Diseño responsivo mobile-first
+- ✅ SEO-friendly con URLs canónicas y datos OpenGraph
+- ✅ Soporte de sitemap
+- ✅ Soporte de RSS Feed
+- ✅ Soporte de Markdown & MDX
 
-## Template Integrations
+## Integraciones de Plantilla
 
 - @astrojs/tailwind - https://docs.astro.build/en/guides/integrations-guide/tailwind/
 - @astrojs/sitemap - https://docs.astro.build/en/guides/integrations-guide/sitemap/
 - @astrojs/mdx - https://docs.astro.build/en/guides/markdown-content/
 - @astrojs/rss - https://docs.astro.build/en/guides/rss/
 
-## Project Structure
+## Estructura del Proyecto
 
-Inside of Dante Astro theme, you'll see the following folders and files:
+Dentro del tema Dante de Astro, verás las siguientes carpetas y archivos:
 
 ```text
 ├── public/
 ├── src/
-│   ├── components/
-│   ├── content/
-│   ├── data/
-│   ├── icons/
-│   ├── layouts/
-│   ├── pages/
-│   ├── styles/
-│   └── utils/
+│   ├── components/
+│   ├── content/
+│   ├── data/
+│   ├── icons/
+│   ├── layouts/
+│   ├── pages/
+│   ├── styles/
+│   └── utils/
 ├── astro.config.mjs
 ├── package.json
 ├── README.md
 └── tsconfig.json
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+Astro busca archivos `.astro` o `.md` en el directorio `src/pages/`. Cada página se expone como una ruta basada en su nombre de archivo.
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro (`.astro`) components.
+No hay nada especial sobre `src/components/`, pero es donde nos gusta poner cualquier componente Astro (`.astro`).
 
-The `src/content/` directory contains "collections" of related Markdown and MDX documents. Use `getCollection()` to retrieve posts from `src/content/blog/`, and type-check your frontmatter using an optional schema. See [Astro's Content Collections docs](https://docs.astro.build/en/guides/content-collections/) to learn more.
+El directorio `src/content/` contiene "colecciones" de documentos Markdown y MDX relacionados. Usa `getCollection()` para recuperar posts de `src/content/blog/`, y verifica el tipo de tu frontmatter usando un esquema opcional. Ve la [documentación de Colecciones de Contenido de Astro](https://docs.astro.build/en/guides/content-collections/) para aprender más.
 
-Any static assets, like images, can be placed in the `public/` directory.
+Cualquier activo estático, como imágenes, puede ser colocado en el directorio `public/`.
 
-## Astro.js Commands
+## Comandos de Astro.js
 
-All commands are run from the root of the project, from a terminal:
+Todos los comandos se ejecutan desde la raíz del proyecto, desde una terminal:
 
-| Command                   | Action                                           |
+| Comando                   | Acción                                           |
 | :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+| `npm install`             | Instala dependencias                             |
+| `npm run dev`             | Inicia el servidor de desarrollo local en `localhost:4321` |
+| `npm run build`           | Construye tu sitio de producción en `./dist/`    |
+| `npm run preview`         | Previsualiza tu build localmente, antes de desplegar |
+| `npm run astro ...`       | Ejecuta comandos CLI como `astro add`, `astro check` |
+| `npm run astro -- --help` | Obtén ayuda usando el CLI de Astro               |
 
-## Want to learn more about Astro.js?
+## ¿Quieres aprender más sobre Astro.js?
 
-Check out [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Revisa [nuestra documentación](https://docs.astro.build) o únete a nuestro [servidor de Discord](https://astro.build/chat).
 
-## Credits
+## Créditos
 
-- Demo content generate with [Chat GPT](https://chat.openai.com/)
-- Images for demo content from [Unsplash](https://unsplash.com/)
+- Contenido demo generado con [Chat GPT](https://chat.openai.com/)
+- Imágenes para contenido demo de [Unsplash](https://unsplash.com/)
 
-## Astro Themes by Just Good UI
+## Temas de Astro por Just Good UI
 
-- [Ovidius](https://github.com/JustGoodUI/ovidius-astro-theme) is a free single author blog theme.
+- [Ovidius](https://github.com/JustGoodUI/ovidius-astro-theme) es un tema de blog de autor único gratuito.
 
-## License
+## Licencia
 
-Licensed under the [GPL-3.0](https://github.com/JustGoodUI/dante-astro-theme/blob/main/LICENSE) license.
+Licenciado bajo la licencia [GPL-3.0](https://github.com/JustGoodUI/dante-astro-theme/blob/main/LICENSE).

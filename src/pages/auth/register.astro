@@ -1,0 +1,157 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Registrarse" description="Crea una nueva cuenta" showHeader={false}>
+    <div class="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-md w-full space-y-8">
+            <div>
+                <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900 dark:text-white">Crear Cuenta</h2>
+                <p class="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
+                    O
+                    <a href="/auth/login" class="font-medium text-blue-600 hover:text-blue-500"> inicia sesión si ya tienes cuenta </a>
+                </p>
+            </div>
+
+            <form class="mt-8 space-y-6" id="register-form">
+                <div class="space-y-4">
+                    <div>
+                        <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300"> Nombre completo </label>
+                        <input
+                            id="name"
+                            name="name"
+                            type="text"
+                            required
+                            class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white dark:bg-gray-700"
+                            placeholder="Tu nombre completo"
+                        />
+                    </div>
+
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300"> Email </label>
+                        <input
+                            id="email"
+                            name="email"
+                            type="email"
+                            required
+                            class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white dark:bg-gray-700"
+                            placeholder="tu@email.com"
+                        />
+                    </div>
+
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300"> Contraseña </label>
+                        <input
+                            id="password"
+                            name="password"
+                            type="password"
+                            required
+                            minlength="6"
+                            class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white dark:bg-gray-700"
+                            placeholder="Mínimo 6 caracteres"
+                        />
+                    </div>
+
+                    <div>
+                        <label for="confirmPassword" class="block text-sm font-medium text-gray-700 dark:text-gray-300"> Confirmar contraseña </label>
+                        <input
+                            id="confirmPassword"
+                            name="confirmPassword"
+                            type="password"
+                            required
+                            class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white dark:bg-gray-700"
+                            placeholder="Repite tu contraseña"
+                        />
+                    </div>
+                </div>
+
+                <div class="flex items-center">
+                    <input id="terms" name="terms" type="checkbox" required class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" />
+                    <label for="terms" class="ml-2 block text-sm text-gray-900 dark:text-white">
+                        Acepto los
+                        <a href="/terms" class="text-blue-600 hover:text-blue-500">términos y condiciones</a>
+                    </label>
+                </div>
+
+                <div>
+                    <button
+                        type="submit"
+                        class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                    >
+                        Crear Cuenta
+                    </button>
+                </div>
+
+                <div id="register-message" class="text-sm text-center hidden"></div>
+            </form>
+        </div>
+    </div>
+</BaseLayout>
+
+<script>
+    document.addEventListener('astro:page-load', () => {
+        const form = document.getElementById('register-form') as HTMLFormElement;
+        const messageDiv = document.getElementById('register-message') as HTMLDivElement;
+
+        if (form) {
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const formData = new FormData(form);
+                const data = {
+                    name: formData.get('name'),
+                    email: formData.get('email'),
+                    password: formData.get('password'),
+                    confirmPassword: formData.get('confirmPassword')
+                };
+
+                // Validación del lado del cliente
+                if (data.password !== data.confirmPassword) {
+                    showMessage('Las contraseñas no coinciden', 'error');
+                    return;
+                }
+
+                if (data.password.toString().length < 6) {
+                    showMessage('La contraseña debe tener al menos 6 caracteres', 'error');
+                    return;
+                }
+
+                try {
+                    const response = await fetch('/api/auth/register', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(data)
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        showMessage('Cuenta creada exitosamente. Redirigiendo al login...', 'success');
+                        setTimeout(() => {
+                            window.location.href = '/auth/login';
+                        }, 2000);
+                    } else {
+                        showMessage(result.message, 'error');
+                    }
+                } catch (error) {
+                    showMessage('Error al crear la cuenta', 'error');
+                }
+            });
+        }
+
+        function showMessage(message: string, type: 'success' | 'error') {
+            if (messageDiv) {
+                messageDiv.textContent = message;
+                messageDiv.className = `text-sm text-center ${type === 'success' ? 'text-green-600' : 'text-red-600'}`;
+                messageDiv.classList.remove('hidden');
+
+                setTimeout(() => {
+                    messageDiv.classList.add('hidden');
+                }, 5000);
+            }
+        }
+    });
+</script>
+

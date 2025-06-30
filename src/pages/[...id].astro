@@ -14,7 +14,24 @@ export async function getStaticPaths() {
 
 type Props = { page: CollectionEntry<'pages'> };
 
-const { page } = Astro.props;
+// En modo servidor, obtener los datos dinámicamente
+let page: CollectionEntry<'pages'> | undefined;
+
+if (Astro.props.page) {
+    // Modo estático
+    page = Astro.props.page;
+} else {
+    // Modo servidor - obtener datos dinámicamente
+    const pages = await getCollection('pages');
+    const pageId = Astro.params.id;
+    page = pages.find((p) => p.id === pageId);
+}
+
+// Validar que page existe
+if (!page) {
+    return Astro.redirect('/404');
+}
+
 const { title, seo } = page.data;
 const { Content } = await render(page);
 ---

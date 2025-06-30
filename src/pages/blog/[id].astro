@@ -5,8 +5,12 @@ import Button from '../../components/Button.astro';
 import FormattedDate from '../../components/FormattedDate.astro';
 import PostPreview from '../../components/PostPreview.astro';
 import Subscribe from '../../components/Subscribe.astro';
+import Comments from '../../components/Comments.astro';
 import { sortItemsByDateDesc } from '../../utils/data-utils';
 import { slugify } from '../../utils/common-utils';
+import { db } from 'astro:db';
+import { PageViews } from 'astro:db';
+import CommentForm from '../../components/CommentForm.astro';
 
 export async function getStaticPaths() {
     const posts = (await getCollection('blog')).sort(sortItemsByDateDesc);
@@ -23,52 +27,156 @@ export async function getStaticPaths() {
 
 type Props = { post: CollectionEntry<'blog'>; prevPost: CollectionEntry<'blog'>; nextPost: CollectionEntry<'blog'> };
 
+// En modo servidor, obtener los datos dinámicamente
+let post: CollectionEntry<'blog'> | undefined;
+let prevPost: CollectionEntry<'blog'> | null = null;
+let nextPost: CollectionEntry<'blog'> | null = null;
+
+if (Astro.props.post) {
+    // Modo estático
+    post = Astro.props.post;
+    prevPost = Astro.props.prevPost;
+    nextPost = Astro.props.nextPost;
+} else {
+    // Modo servidor - obtener datos dinámicamente
+    const posts = (await getCollection('blog')).sort(sortItemsByDateDesc);
+    const postId = Astro.params.id;
+    const postIndex = posts.findIndex((p) => p.id === postId);
+
+    if (postIndex === -1) {
+        return Astro.redirect('/404');
+    }
+
+    post = posts[postIndex];
+    prevPost = postIndex + 1 < posts.length ? posts[postIndex + 1] : null;
+    nextPost = postIndex > 0 ? posts[postIndex - 1] : null;
+}
+
+// Validar que post existe
+if (!post) {
+    return Astro.redirect('/404');
+}
+
 const { href } = Astro.url;
-const { post, prevPost, nextPost } = Astro.props;
 const { title, publishDate, updatedDate, excerpt, tags = [], seo } = post.data;
 const { Content } = await render(post);
+
+// Registrar vista de página solo si estamos en modo servidor
+if (import.meta.env.DEV || import.meta.env.PROD) {
+    try {
+        // TODO: Arreglar inserción de PageViews
+        // await db.insert(PageViews).values({
+        //     pageUrl: `/blog/${post.id}`,
+        //     userAgent: Astro.request.headers.get('user-agent') || '',
+        //     ipAddress: Astro.clientAddress || 'unknown'
+        // });
+    } catch (error) {
+        console.warn('No se pudo registrar la vista de página:', error);
+    }
+}
+
+// Obtener posts relacionados
+const allPosts = await getCollection('blog');
+const relatedPosts = allPosts.filter((p) => p.id !== post.id).slice(0, 3);
 ---
 
 <BaseLayout title={seo?.title ?? title} description={seo?.description ?? excerpt} image={seo?.image} pageType="article" showHeader={false}>
-    <article class="mb-16 sm:mb-24">
+    <article class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <header class="mb-8">
-            <h1 class="text-3xl leading-tight font-serif font-medium sm:text-5xl sm:leading-tight">{title}</h1>
-            <div class="mt-4 text-sm">
-                <FormattedDate date={publishDate} />
+            <div class="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-4">
+                <time datetime={publishDate.toISOString()}>
+                    {
+                        publishDate.toLocaleDateString('es-VE', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
+                        })
+                    }
+                </time>
                 {
-                    updatedDate && (
+                    tags.length > 0 && (
                         <>
-                            {' '}
-                            <span>
-                                (Updated on <FormattedDate date={updatedDate} />)
-                            </span>
+                            <span class="mx-2">•</span>
+                            <div class="flex gap-2">
+                                {tags.map((tag) => (
+                                    <a href={`/tags/${slugify(tag)}`} class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
+                                        #{tag}
+                                    </a>
+                                ))}
+                            </div>
                         </>
                     )
                 }
             </div>
+
+            <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+                {title}
+            </h1>
+
+            {excerpt && <p class="text-xl text-gray-600 dark:text-gray-300 mb-6">{excerpt}</p>}
+
+            {seo?.image && <img src={seo.image.src} alt={seo.image.alt || title} class="w-full h-64 object-cover rounded-lg mb-8" />}
         </header>
-        <div class="max-w-none prose sm:prose-lg">
+
+        <div class="prose prose-lg dark:prose-invert max-w-none mb-12">
             <Content />
         </div>
-        <div class="mt-8 flex flex-wrap items-center gap-6 text-sm justify-between sm:mt-12 sm:text-base">
-            {
-                tags.length > 0 && (
-                    <div class="flex flex-wrap gap-x-5 gap-y-1 text-sm">
-                        {tags.map((tag) => (
-                            <a class="text-main hover:underline" href={`/tags/${slugify(tag)}`}>
-                                #{tag}
-                            </a>
+
+        <!-- Sección de comentarios -->
+        <section class="mt-16">
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-8">Comentarios</h2>
+
+            <!-- Formulario de comentarios -->
+            <CommentForm postId={post.id} />
+
+            <!-- Lista de comentarios -->
+            <div class="mt-8">
+                <Comments postId={post.id} />
+            </div>
+        </section>
+
+        <!-- Posts relacionados -->
+        {
+            relatedPosts.length > 0 && (
+                <section class="mt-16">
+                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-8">Posts Relacionados</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        {relatedPosts.map((relatedPost) => (
+                            <article class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+                                {relatedPost.data.seo?.image && (
+                                    <img
+                                        src={relatedPost.data.seo.image.src}
+                                        alt={relatedPost.data.seo.image.alt || relatedPost.data.title}
+                                        class="w-full h-48 object-cover"
+                                    />
+                                )}
+                                <div class="p-6">
+                                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                                        <a href={`/blog/${relatedPost.id}`} class="hover:text-blue-600 dark:hover:text-blue-400">
+                                            {relatedPost.data.title}
+                                        </a>
+                                    </h3>
+                                    <p class="text-gray-600 dark:text-gray-300 text-sm mb-4">{relatedPost.data.excerpt}</p>
+                                    <time datetime={relatedPost.data.publishDate.toISOString()} class="text-xs text-gray-500 dark:text-gray-400">
+                                        {relatedPost.data.publishDate.toLocaleDateString('es-VE', {
+                                            year: 'numeric',
+                                            month: 'short',
+                                            day: 'numeric'
+                                        })}
+                                    </time>
+                                </div>
+                            </article>
                         ))}
                     </div>
-                )
-            }
-            <Button class="copy-url-button" aria-label="Copy link" data-url={href} data-tooltip-default="Copy link" data-tooltip-success="Copied">Share</Button>
-        </div>
+                </section>
+            )
+        }
     </article>
+
     {
         (prevPost || nextPost) && (
             <div class="my-16 sm:my-24">
-                <h2 class="mb-12 text-xl font-serif italic sm:mb-16 sm:text-2xl">Read Next</h2>
+                <h2 class="mb-12 text-xl font-serif italic sm:mb-16 sm:text-2xl">Leer Siguiente</h2>
                 {nextPost && <PostPreview post={nextPost} class="mb-10 sm:mb-12" headingLevel="h3" />}
                 {prevPost && <PostPreview post={prevPost} class="mb-10 sm:mb-12" headingLevel="h3" />}
             </div>
@@ -90,7 +198,7 @@ const { Content } = await render(post);
 
             await navigator.clipboard.writeText(url);
 
-            button.innerText = 'Copied';
+            button.innerText = 'Copiado';
 
             setTimeout(() => {
                 button.innerText = label;

@@ -1,66 +1,66 @@
 ---
-title: 'EcoBuddy: Sustainable Living App'
-description: EcoBuddy is a mobile app that gamifies sustainable living. Users can set eco-friendly goals, track their carbon footprint, and earn virtual rewards for adopting environmentally conscious habits.
-publishDate: 'Jan 02 2024'
+title: 'EcoBuddy: Aplicación de Vida Sostenible'
+description: EcoBuddy es una aplicación móvil que gamifica la vida sostenible. Los usuarios pueden establecer objetivos ecológicos, rastrear su huella de carbono y ganar recompensas virtuales por adoptar hábitos conscientes del medio ambiente.
+publishDate: '2024-01-02'
 seo:
   image:
     src: '/project-1.jpg'
-    alt: Project preview
+    alt: Vista previa del proyecto
 ---
 
-![Project preview](/project-1.jpg)
+![Vista previa del proyecto](/project-1.jpg)
 
-**Note:** This case study is entirely fictional and created for the purpose of showcasing [Dante Astro.js theme functionality](https://justgoodui.com/astro-themes/dante/).
+**Nota:** Este caso de estudio es completamente ficticio y fue creado con el propósito de mostrar la funcionalidad del [tema Dante de Astro.js](https://justgoodui.com/astro-themes/dante/).
 
-**Project Overview:**
-EcoBuddy is a revolutionary mobile application designed to make sustainable living accessible, engaging, and rewarding. With a focus on gamification and real-world impact, EcoBuddy encourages users to adopt eco-friendly habits, reduce their carbon footprint, and contribute to a healthier planet.
+**Descripción General del Proyecto:**
+EcoBuddy es una aplicación móvil revolucionaria diseñada para hacer la vida sostenible accesible, atractiva y gratificante. Con un enfoque en la gamificación y el impacto en el mundo real, EcoBuddy anima a los usuarios a adoptar hábitos ecológicos, reducir su huella de carbono y contribuir a un planeta más saludable.
 
-## Objectives
+## Objetivos
 
-1. Develop a user-friendly mobile app that motivates individuals to adopt sustainable practices in their daily lives.
-2. Utilize gamification elements to make sustainable living fun and interactive.
-3. Provide educational resources and personalized challenges to empower users to make informed eco-conscious decisions.
+1. Desarrollar una aplicación móvil fácil de usar que motive a los individuos a adoptar prácticas sostenibles en su vida diaria.
+2. Utilizar elementos de gamificación para hacer la vida sostenible divertida e interactiva.
+3. Proporcionar recursos educativos y desafíos personalizados para empoderar a los usuarios a tomar decisiones informadas y conscientes del medio ambiente.
 
-## Features
+## Características
 
-1. **EcoScore and Challenges:**
+1. **EcoScore y Desafíos:**
 
-- Users are assigned an EcoScore based on their sustainable activities and choices.
-- Daily and weekly challenges encourage users to adopt new habits and compete with friends or the community to earn EcoPoints.
+- Los usuarios reciben un EcoScore basado en sus actividades y elecciones sostenibles.
+- Los desafíos diarios y semanales animan a los usuarios a adoptar nuevos hábitos y competir con amigos o la comunidad para ganar EcoPoints.
 
-2. **Personalized Eco-Goals:**
+2. **Objetivos Ecológicos Personalizados:**
 
-- Users can set and track personalized eco-goals, such as reducing plastic usage, conserving water, or choosing eco-friendly transportation.
-- The app provides tips and suggestions to help users achieve their goals.
+- Los usuarios pueden establecer y rastrear objetivos ecológicos personalizados, como reducir el uso de plástico, conservar agua, o elegir transporte ecológico.
+- La aplicación proporciona consejos y sugerencias para ayudar a los usuarios a alcanzar sus objetivos.
 
-3. **Green Rewards Marketplace:**
+3. **Mercado de Recompensas Verdes:**
 
-- EcoPoints earned through challenges and sustainable actions can be redeemed in a virtual Green Rewards Marketplace.
-- The marketplace offers discounts on eco-friendly products, services, and even contributions to environmental causes.
+- Los EcoPoints ganados a través de desafíos y acciones sostenibles pueden ser canjeados en un Mercado de Recompensas Verdes virtual.
+- El mercado ofrece descuentos en productos ecológicos, servicios, e incluso contribuciones a causas ambientales.
 
-4. **Community Hub:**
+4. **Centro Comunitario:**
 
-- A community feature allows users to connect, share their eco-friendly achievements, and inspire others.
-- Users can join local eco-groups, organize clean-up events, and collaborate on sustainability projects.
+- Una característica comunitaria permite a los usuarios conectarse, compartir sus logros ecológicos e inspirar a otros.
+- Los usuarios pueden unirse a grupos ecológicos locales, organizar eventos de limpieza y colaborar en proyectos de sostenibilidad.
 
-5. **EcoEducator AI Assistant:**
+5. **Asistente AI EcoEducador:**
 
-- An AI-powered assistant, EcoEducator, provides personalized eco-tips, facts, and information based on users' preferences and habits.
-- Users can chat with EcoEducator for instant advice on sustainable living.
+- Un asistente impulsado por IA, EcoEducador, proporciona consejos ecológicos personalizados, hechos e información basados en las preferencias y hábitos de los usuarios.
+- Los usuarios pueden chatear con EcoEducador para obtener consejos instantáneos sobre vida sostenible.
 
-## Technology Stack
+## Stack Tecnológico
 
-- Frontend: React Native for cross-platform mobile app development.
-- Backend: Firebase for real-time data synchronization and user authentication.
-- Database: Firestore for scalable and flexible data storage.
-- AI Integration: Dialogflow for natural language processing and conversation with EcoEducator.
+- Frontend: React Native para desarrollo de aplicaciones móviles multiplataforma.
+- Backend: Firebase para sincronización de datos en tiempo real y autenticación de usuarios.
+- Base de datos: Firestore para almacenamiento de datos escalable y flexible.
+- Integración de IA: Dialogflow para procesamiento de lenguaje natural y conversación con EcoEducador.
 
-## Outcome
+## Resultado
 
-EcoBuddy has successfully created a community of environmentally conscious individuals who actively participate in sustainable living practices. The app not only educates and motivates users but also provides tangible rewards for their commitment to a greener lifestyle, fostering a positive impact on the environment.
+EcoBuddy ha creado exitosamente una comunidad de individuos conscientes del medio ambiente que participan activamente en prácticas de vida sostenible. La aplicación no solo educa y motiva a los usuarios, sino que también proporciona recompensas tangibles por su compromiso con un estilo de vida más verde, fomentando un impacto positivo en el medio ambiente.
 
-## Client Testimonial
+## Testimonio del Cliente
 
-> We couldn't be happier with the results delivered by Ethan Donovan. From the initial concept discussions to the final product, their responsiveness and collaborative approach were impressive. Our startup's website now stands out, thanks to their creative input and commitment to excellence.
+> No podríamos estar más felices con los resultados entregados por Ethan Donovan. Desde las discusiones iniciales del concepto hasta el producto final, su capacidad de respuesta y enfoque colaborativo fueron impresionantes. El sitio web de nuestra startup ahora se destaca, gracias a su aporte creativo y compromiso con la excelencia.
 
-**Note:** This case study is entirely fictional and created for the purpose of showcasing [Dante Astro.js theme functionality](https://justgoodui.com/astro-themes/dante/).
+**Nota:** Este caso de estudio es completamente ficticio y fue creado con el propósito de mostrar la funcionalidad del [tema Dante de Astro.js](https://justgoodui.com/astro-themes/dante/).

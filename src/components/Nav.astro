@@ -12,7 +12,7 @@ const navLinks = siteConfig.headerNavLinks || [];
             <div class="w-full max-w-3xl mx-auto relative">
                 <button
                     class="menu-toggle cursor-pointer w-8 h-8 -ml-1 flex items-center justify-center relative z-30 md:hidden"
-                    aria-label="Open Menu"
+                    aria-label="Abrir Menú"
                     aria-expanded="false"
                     aria-controls="menu-items"
                 >
@@ -98,7 +98,7 @@ const navLinks = siteConfig.headerNavLinks || [];
             const isMenuExpanded = menuToggleBtn.getAttribute('aria-expanded') === 'true';
             menuToggleBtn.classList.toggle('is-active');
             menuToggleBtn.setAttribute('aria-expanded', isMenuExpanded ? 'false' : 'true');
-            menuToggleBtn.setAttribute('aria-label', isMenuExpanded ? 'Open Menu' : 'Close Menu');
+            menuToggleBtn.setAttribute('aria-label', isMenuExpanded ? 'Abrir Menú' : 'Cerrar Menú');
             menu?.classList.toggle('is-visible');
         });
     }

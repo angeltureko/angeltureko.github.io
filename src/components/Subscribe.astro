@@ -16,16 +16,9 @@ const { class: className } = Astro.props;
                 </h2>
             )}
             {subscribe.text && <p class="w-full max-w-xl mb-8 text-sm leading-normal">{subscribe.text}</p>}
-            <form
-                action={subscribe.formUrl}
-                method="post"
-                id="subscribe-form"
-                name="subscribe-form"
-                class="w-full max-w-xl flex flex-col gap-3.5 sm:flex-row"
-                target="_blank"
-            >
+            <form id="subscribe-form" name="subscribe-form" class="w-full max-w-xl flex flex-col gap-3.5 sm:flex-row">
                 <label for="email" class="sr-only">
-                    Email Address
+                    Dirección de Email
                 </label>
                 <input
                     type="email"
@@ -34,12 +27,67 @@ const { class: className } = Astro.props;
                     class="w-full h-9 px-5 py-2 text-sm text-main bg-transparent border border-main rounded-full placeholder:text-main/60 focus:outline-hidden"
                     required=""
                     value=""
-                    placeholder="Your email"
+                    placeholder="Tu email"
                 />
                 <Button type="submit" name="subscribe" class="w-full h-9 sm:w-auto">
-                    Subscribe
+                    Suscribirse
                 </Button>
             </form>
+            <div id="subscribe-message" class="mt-4 text-sm hidden" />
         </section>
     )
 }
+
+<script>
+    document.addEventListener('astro:page-load', () => {
+        const form = document.getElementById('subscribe-form') as HTMLFormElement;
+        const messageDiv = document.getElementById('subscribe-message') as HTMLDivElement;
+
+        if (form) {
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const formData = new FormData(form);
+                const email = formData.get('email') as string;
+
+                if (!email || !email.includes('@')) {
+                    showMessage('Por favor ingresa un email válido', 'error');
+                    return;
+                }
+
+                try {
+                    const response = await fetch('/api/subscribe', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ email })
+                    });
+
+                    const data = await response.json();
+
+                    if (data.success) {
+                        showMessage(data.message, 'success');
+                        form.reset();
+                    } else {
+                        showMessage(data.message, 'error');
+                    }
+                } catch (error) {
+                    showMessage('Error al procesar la suscripción', 'error');
+                }
+            });
+        }
+
+        function showMessage(message: string, type: 'success' | 'error') {
+            if (messageDiv) {
+                messageDiv.textContent = message;
+                messageDiv.className = `mt-4 text-sm ${type === 'success' ? 'text-green-600' : 'text-red-600'}`;
+                messageDiv.classList.remove('hidden');
+
+                setTimeout(() => {
+                    messageDiv.classList.add('hidden');
+                }, 5000);
+            }
+        }
+    });
+</script>

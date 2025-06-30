@@ -23,7 +23,40 @@ type Props = {
     nextProject: CollectionEntry<'projects'>;
 };
 
-const { project, prevProject, nextProject } = Astro.props;
+// Obtener datos del proyecto
+let project: CollectionEntry<'projects'> | undefined;
+let prevProject: CollectionEntry<'projects'> | null = null;
+let nextProject: CollectionEntry<'projects'> | null = null;
+
+// Si estamos en modo estático, usar props
+if (Astro.props.project) {
+    project = Astro.props.project;
+    prevProject = Astro.props.prevProject;
+    nextProject = Astro.props.nextProject;
+} else {
+    // Si estamos en modo servidor, obtener datos dinámicamente
+    const { id } = Astro.params;
+    if (id) {
+        try {
+            const projects = (await getCollection('projects')).sort(sortItemsByDateDesc);
+            const projectIndex = projects.findIndex((p) => p.id === id);
+
+            if (projectIndex !== -1) {
+                project = projects[projectIndex];
+                prevProject = projectIndex + 1 !== projects.length ? projects[projectIndex + 1] : null;
+                nextProject = projectIndex !== 0 ? projects[projectIndex - 1] : null;
+            }
+        } catch (error) {
+            console.error('Error loading project:', error);
+        }
+    }
+}
+
+// Si no se encontró el proyecto, redirigir a 404
+if (!project) {
+    return Astro.redirect('/404');
+}
+
 const { title, description, seo } = project.data;
 const { Content } = await render(project);
 ---
@@ -40,7 +73,7 @@ const { Content } = await render(project);
     {
         (prevProject || nextProject) && (
             <div class="my-16 sm:my-24">
-                <h2 class="mb-12 text-xl font-serif italic sm:mb-16 sm:text-2xl">View Next</h2>
+                <h2 class="mb-12 text-xl font-serif italic sm:mb-16 sm:text-2xl">Ver Siguiente</h2>
                 {nextProject && <ProjectPreview project={nextProject} class="mb-10 sm:mb-12" headingLevel="h3" />}
                 {prevProject && <ProjectPreview project={prevProject} class="mb-10 sm:mb-12" headingLevel="h3" />}
             </div>

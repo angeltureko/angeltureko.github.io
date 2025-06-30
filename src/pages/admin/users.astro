@@ -1,0 +1,53 @@
+---
+import { db, Users } from 'astro:db';
+import AdminNav from '../../components/AdminNav.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+// Obtener todos los usuarios
+const allUsers = await db.select().from(Users);
+---
+
+<BaseLayout title="Gestionar Usuarios" description="Panel de gestión de usuarios" showHeader={false}>
+    <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
+        <AdminNav />
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Gestionar Usuarios</h1>
+                <p class="mt-2 text-gray-600 dark:text-gray-400">Ver y gestionar usuarios registrados</p>
+            </div>
+
+            <!-- Lista de usuarios -->
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
+                <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                    <h2 class="text-xl font-semibold text-gray-900 dark:text-white">
+                        Usuarios Registrados ({allUsers.length})
+                    </h2>
+                </div>
+
+                {
+                    allUsers.length > 0 ? (
+                        <div class="divide-y divide-gray-200 dark:divide-gray-700">
+                            {allUsers.map((user) => (
+                                <div class="p-6">
+                                    <div class="flex justify-between items-start">
+                                        <div>
+                                            <h4 class="font-medium text-gray-900 dark:text-white">{user.name}</h4>
+                                            <p class="text-sm text-gray-500">{user.email}</p>
+                                            <p class="text-xs text-gray-400 mt-1">Registrado: {new Date(user.createdAt).toLocaleString('es-VE')}</p>
+                                            <p class="text-xs text-gray-400">Suscrito: {user.isSubscribed ? 'Sí' : 'No'}</p>
+                                        </div>
+                                        <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">Usuario</span>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <div class="p-6 text-center text-gray-500">No hay usuarios registrados.</div>
+                    )
+                }
+            </div>
+        </div>
+    </div>
+</BaseLayout>
+

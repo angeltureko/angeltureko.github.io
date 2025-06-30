@@ -1,0 +1,127 @@
+---
+interface Props {
+    postId: string;
+}
+
+const { postId } = Astro.props;
+---
+
+<div class="comment-form bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
+    <h4 class="font-medium mb-4">Agregar comentario</h4>
+
+    <form id="comment-form" class="space-y-4">
+        <input type="hidden" name="postId" value={postId} />
+
+        <div>
+            <label for="authorName" class="block text-sm font-medium mb-2">Nombre *</label>
+            <input
+                type="text"
+                id="authorName"
+                name="authorName"
+                required
+                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Tu nombre"
+            />
+        </div>
+
+        <div>
+            <label for="authorEmail" class="block text-sm font-medium mb-2">Email *</label>
+            <input
+                type="email"
+                id="authorEmail"
+                name="authorEmail"
+                required
+                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="tu@email.com"
+            />
+        </div>
+
+        <div>
+            <label for="commentContent" class="block text-sm font-medium mb-2">Comentario *</label>
+            <textarea
+                id="commentContent"
+                name="content"
+                required
+                rows="4"
+                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Escribe tu comentario aquí..."></textarea>
+        </div>
+
+        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition duration-200">
+            Enviar comentario
+        </button>
+    </form>
+
+    <div id="comment-message" class="mt-4 text-sm hidden"></div>
+</div>
+
+<script>
+    document.addEventListener('astro:page-load', () => {
+        const form = document.getElementById('comment-form') as HTMLFormElement;
+        const messageDiv = document.getElementById('comment-message') as HTMLDivElement;
+
+        if (form) {
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const formData = new FormData(form);
+                const data = {
+                    postId: formData.get('postId'),
+                    authorName: formData.get('authorName'),
+                    authorEmail: formData.get('authorEmail'),
+                    content: formData.get('content')
+                };
+
+                // Validación básica
+                if (!data.authorName || !data.authorEmail || !data.content) {
+                    showMessage('Por favor completa todos los campos', 'error');
+                    return;
+                }
+
+                if (!data.authorEmail.toString().includes('@')) {
+                    showMessage('Por favor ingresa un email válido', 'error');
+                    return;
+                }
+
+                try {
+                    const response = await fetch('/api/comments', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(data)
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        showMessage('Comentario enviado. Será revisado antes de publicarse.', 'success');
+                        form.reset();
+
+                        // Recargar la página para mostrar el nuevo comentario
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 2000);
+                    } else {
+                        showMessage(result.message, 'error');
+                    }
+                } catch (error) {
+                    showMessage('Error al enviar el comentario', 'error');
+                }
+            });
+        }
+
+        function showMessage(message: string, type: 'success' | 'error') {
+            if (messageDiv) {
+                messageDiv.textContent = message;
+                messageDiv.className = `mt-4 text-sm ${type === 'success' ? 'text-green-600' : 'text-red-600'}`;
+                messageDiv.classList.remove('hidden');
+
+                setTimeout(() => {
+                    messageDiv.classList.add('hidden');
+                }, 5000);
+            }
+        }
+    });
+</script>
+

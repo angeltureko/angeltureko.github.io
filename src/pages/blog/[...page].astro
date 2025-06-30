@@ -1,11 +1,11 @@
 ---
 import type { GetStaticPathsOptions, Page } from 'astro';
 import { type CollectionEntry, getCollection } from 'astro:content';
-import BaseLayout from '../../layouts/BaseLayout.astro';
 import Pagination from '../../components/Pagination.astro';
 import PostPreview from '../../components/PostPreview.astro';
 import Subscribe from '../../components/Subscribe.astro';
 import siteConfig from '../../data/site-config';
+import BaseLayout from '../../layouts/BaseLayout.astro';
 import { sortItemsByDateDesc } from '../../utils/data-utils';
 
 export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
@@ -15,17 +15,52 @@ export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
 
 type Props = { page: Page<CollectionEntry<'blog'>> };
 
-const { page } = Astro.props;
-const blog = page.data;
+// En modo servidor, obtener los datos dinámicamente
+let page: Page<CollectionEntry<'blog'>> | undefined;
+let blog: CollectionEntry<'blog'>[] = [];
+
+if (Astro.props.page) {
+    // Modo estático
+    page = Astro.props.page;
+    blog = page.data;
+} else {
+    // Modo servidor - obtener datos dinámicamente
+    const posts = (await getCollection('blog')).sort(sortItemsByDateDesc);
+    const currentPage = parseInt(Astro.params.page || '1');
+    const pageSize = siteConfig.postsPerPage || 4;
+    const startIndex = (currentPage - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
+
+    blog = posts.slice(startIndex, endIndex);
+
+    // Crear objeto page para paginación
+    page = {
+        data: blog,
+        url: Astro.url,
+        currentPage,
+        lastPage: Math.ceil(posts.length / pageSize),
+        total: posts.length,
+        size: pageSize,
+        start: startIndex + 1,
+        end: Math.min(endIndex, posts.length),
+        prev: currentPage > 1 ? currentPage - 1 : undefined,
+        next: currentPage < Math.ceil(posts.length / pageSize) ? currentPage + 1 : undefined
+    } as unknown as Page<CollectionEntry<'blog'>>;
+}
+
+// Validar que page existe
+if (!page) {
+    return Astro.redirect('/404');
+}
 ---
 
 <BaseLayout
     title="Blog"
-    description="Embark on a journey of personal insights and experiences through my blog"
-    image={{ src: '/dante-preview.jpg', alt: 'The preview of the site' }}
+    description="Embárcate en un viaje de insights personales y experiencias a través de mi blog"
+    image={{ src: '/dante-preview.jpg', alt: 'La vista previa del sitio' }}
     showHeader={false}
 >
-    <h1 class="mb-12 text-2xl leading-tight font-serif italic sm:mb-16 sm:text-4xl">Blog Archive</h1>
+    <h1 class="mb-12 text-2xl leading-tight font-serif italic sm:mb-16 sm:text-4xl">Archivo del Blog</h1>
     {blog.map((post) => <PostPreview post={post} class="mb-10 sm:mb-12" />)}
     <Pagination page={page} class="my-16 sm:my-24" />
     <Subscribe class="my-16 sm:my-24" />
